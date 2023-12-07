@@ -97,6 +97,7 @@ namespace CoStudyCloud.Persistence
                             Id INT64 NOT NULL,
                             StudyGroupId INT64,
                             UploaderUserId INT64,
+                            Title STRING(100),
                             FileName STRING(255),
                             FileURL STRING(255),
                             CreateDate TIMESTAMP,

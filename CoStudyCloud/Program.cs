@@ -1,8 +1,10 @@
+using CoStudyCloud.Infrastructure.CloudStorage;
 using CoStudyCloud.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<ICloudStorage, GoogleCloudStorage>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
