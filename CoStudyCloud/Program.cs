@@ -1,3 +1,5 @@
+using CoStudyCloud.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,5 +25,19 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+//Ensure database is created
+using var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.CreateScope();
+if (serviceScope != null)
+{
+    string? connectionString =
+        serviceScope.ServiceProvider.GetRequiredService<IConfiguration>().GetConnectionString("SpannerConnection");
+
+    if (!string.IsNullOrEmpty(connectionString))
+    {
+        await ApplicationDbInitializer.Initialize(connectionString);
+    }
+}
 
 app.Run();
