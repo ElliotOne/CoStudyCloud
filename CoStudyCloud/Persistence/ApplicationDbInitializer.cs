@@ -32,7 +32,7 @@ namespace CoStudyCloud.Persistence
                     // Create Users table
                     await ExecuteDdlAsync(connection, @"
                         CREATE TABLE Users (
-                            Id INT64 NOT NULL,
+                            Id STRING(36) DEFAULT (GENERATE_UUID()),
                             Username STRING(50),
                             Email STRING(100),
                             FirstName STRING(50),
@@ -47,20 +47,20 @@ namespace CoStudyCloud.Persistence
                     // Create StudyGroups table
                     await ExecuteDdlAsync(connection, @"
                         CREATE TABLE StudyGroups (
-                            Id INT64 NOT NULL,
+                            Id STRING(36) DEFAULT (GENERATE_UUID()),
                             Title STRING(100),
                             Description STRING(MAX),
                             CreateDate TIMESTAMP,
-                            AdminUserId INT64,
+                            AdminUserId STRING(36),
                             CONSTRAINT FK_StudyGroupAdmin FOREIGN KEY (AdminUserId) REFERENCES Users(Id) ON DELETE CASCADE,
                         ) PRIMARY KEY (Id)");
 
                     // Create User_StudyGroup_Mapping table
                     await ExecuteDdlAsync(connection, @"
                         CREATE TABLE User_StudyGroup_Mapping (
-                            Id INT64 NOT NULL,
-                            UserId INT64,
-                            StudyGroupId INT64,
+                            Id STRING(36) DEFAULT (GENERATE_UUID()),
+                            UserId STRING(36),
+                            StudyGroupId STRING(36),
                             ApprovalStatus INT64,
                             CONSTRAINT FK_UserStudyGroup_UserId FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
                             CONSTRAINT FK_UserStudyGroup_GroupId FOREIGN KEY (StudyGroupId) REFERENCES StudyGroups(Id) ON DELETE CASCADE
@@ -69,8 +69,8 @@ namespace CoStudyCloud.Persistence
                     // Create StudySessions table
                     await ExecuteDdlAsync(connection, @"
                         CREATE TABLE StudySessions (
-                            Id INT64 NOT NULL,
-                            StudyGroupId INT64,
+                            Id STRING(36) DEFAULT (GENERATE_UUID()),
+                            StudyGroupId STRING(36),
                             Title STRING(100),
                             CalendarSyncId STRING(50),
                             Summary STRING(255),
@@ -84,9 +84,9 @@ namespace CoStudyCloud.Persistence
                     // Create User_StudySession_Mapping table
                     await ExecuteDdlAsync(connection, @"
                         CREATE TABLE User_StudySession_Mapping (
-                            Id INT64 NOT NULL,
-                            UserId INT64,
-                            StudySessionId INT64,
+                            Id STRING(36) DEFAULT (GENERATE_UUID()),
+                            UserId STRING(36),
+                            StudySessionId STRING(36),
                             CONSTRAINT FK_UserStudySession_User FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
                             CONSTRAINT FK_UserStudySession_StudySession FOREIGN KEY (StudySessionId) REFERENCES StudySessions(Id) ON DELETE CASCADE,
                         ) PRIMARY KEY (Id)");
@@ -94,9 +94,9 @@ namespace CoStudyCloud.Persistence
                     // Create Documents table   
                     await ExecuteDdlAsync(connection, @"
                         CREATE TABLE Documents (
-                            Id INT64 NOT NULL,
-                            StudyGroupId INT64,
-                            UploaderUserId INT64,
+                            Id STRING(36) DEFAULT (GENERATE_UUID()),
+                            StudyGroupId STRING(36),
+                            UploaderUserId STRING(36),
                             Title STRING(100),
                             FileName STRING(255),
                             FileURL STRING(255),
