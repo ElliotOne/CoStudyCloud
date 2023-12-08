@@ -3,9 +3,26 @@ using CoStudyCloud.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
+ConfigurationManager configuration = builder.Configuration;
+
 // Add services to the container.
 builder.Services.AddSingleton<ICloudStorage, GoogleCloudStorage>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = "Application";
+        options.DefaultSignInScheme = "External";
+    })
+    .AddCookie("Application")
+    .AddCookie("External")
+    .AddGoogle(options =>
+    {
+        options.ClientId = configuration.GetSection("GoogleOAuth:ClientId").Value!;
+        options.ClientSecret = configuration.GetSection("GoogleOAuth:ClientSecret").Value!;
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -22,6 +39,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
