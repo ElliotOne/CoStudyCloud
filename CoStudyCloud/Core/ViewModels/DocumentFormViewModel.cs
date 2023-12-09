@@ -6,6 +6,8 @@ namespace CoStudyCloud.Core.ViewModels
     public class DocumentFormViewModel
     {
         public int Id { get; set; }
+
+        [Display(Name = "Group")]
         public int StudyGroupId { get; set; }
         public int UserId { get; set; }
 
@@ -18,6 +20,7 @@ namespace CoStudyCloud.Core.ViewModels
 
         [MaxFileSize(5 * 1024 * 1024)]
         [PermittedExtensions(".pdf", ".doc", ".docx", ".ppt", ".pptx")]
+        [Display(Name = "Document")]
         public IFormFile? DocumentFile { get; set; }
     }
 }

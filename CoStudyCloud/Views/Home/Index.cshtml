@@ -2,7 +2,36 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="dashboard-section">
+    <div class="row my-5 justify-content-center">
+        <div class="col-12 mb-5">
+            <div class="section-title text-center">
+                <h2>Dashboard</h2>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-12">
+            <a asp-controller="Groups" asp-action="Index" class="btn btn-primary btn-dashboard">
+                <span class="fa fa-table ico"></span>
+                <span class="text">Groups</span>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-12">
+            <a asp-controller="StudySessions" asp-action="Index" class="btn btn-primary btn-dashboard">
+                <span class="fa fa-list ico"></span>
+                <span class="text">Sessions</span>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-12">
+            <a asp-controller="Documents" asp-action="Index" class="btn btn-primary btn-dashboard">
+                <span class="fa fa-file ico"></span>
+                <span class="text">Documents</span>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-12">
+            <a asp-controller="Users" asp-action="Index" class="btn btn-primary btn-dashboard">
+                <span class="fa fa-users ico"></span>
+                <span class="text">Users</span>
+            </a>
+        </div>
+    </div>
+</section>

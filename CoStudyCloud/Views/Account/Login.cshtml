@@ -1,13 +1,32 @@
-﻿<div class="login-container">
-    <h2>Welcome to CoStudy Cloud!</h2>
+﻿@{
+    ViewData["Title"] = "Login";
+}
 
-    <p>
-        Empowering collaborative learning for everyone. Sign in with your Google account to join study groups, schedule sessions, and explore a world of shared knowledge.
-    </p>
+<section class="login-section">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-12 col-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    <img class="logo-img" src="~/images/logo.svg" alt="logo">
+                </div>
+                <div class="card-body">
+                    <h5>Welcome to CoStudy Cloud!</h5>
+                    <p>
+                        Empowering collaborative learning for everyone. Sign in with your Google account to join study groups, schedule sessions, and explore a world of shared knowledge.
+                    </p>
 
-    <form asp-action="ExternalLogin">
-        <button type="submit" class="login-with-google-btn">
-            Sign in with Google
-        </button>
-    </form>
-</div>
+                    <form asp-action="ExternalLogin">
+                        <button type="submit" class="login-with-google-btn">
+                            Sign in with Google
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer bg-white p-0">
+                    <div class="card-footer-item card-footer-item-bordered float-end">
+                        <a href="mailto:ali.momenzadeh.1999@gmail.com" class="footer-link">Contact Developer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

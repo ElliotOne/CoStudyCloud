@@ -14,6 +14,11 @@ namespace CoStudyCloud.Controllers
             _cloudStorage = cloudStorage;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         public IActionResult Upload()
         {
             return View();

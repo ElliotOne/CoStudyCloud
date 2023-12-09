@@ -1,0 +1,69 @@
+﻿@model CoStudyCloud.Core.ViewModels.ProfileFormViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+@section Scripts
+{
+    <script src="~/js/account/profile.js"></script>
+    <script>
+        $(document).ready(function () {
+            ProfileHandler.init();
+        });
+    </script>
+}
+
+<section class="form-section">
+    <div class="row justify-content-center">
+        <div class="col-12 mb-5">
+            <div class="section-title text-center">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-8 col-sm-12 col-12">
+            <form asp-action="Profile" enctype="multipart/form-data">
+                <div class="form-group image-uploader-container">
+                    <label asp-for="ProfilePicURL"></label>
+                    <img src="/images/profile-placeholder.png" class="img" />
+                    <input asp-for="ProfileImageFile" accept=".jpg, .jpeg, .png" class="hidden-file" />
+                    <span asp-validation-for="ProfileImageFile"></span>
+                    <button type="button" class="btn btn-brand btn-upload">Select Image</button>
+                    <p class="form-hint">
+                        * Please select an image to upload. You should only select an image with the following extensions: .jpg, .jpeg, .png.
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" disabled="disabled" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserRole"></label>
+                    <input asp-for="UserRole" class="form-control" disabled="disabled" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="CreateDate"></label>
+                    <input asp-for="CreateDate" class="form-control" disabled="disabled" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastEditDate"></label>
+                    <input asp-for="LastEditDate" class="form-control" disabled="disabled" />
+                </div>
+                <div class="form-group mt-5">
+                    <input type="submit" value="Update" class="btn btn-success" />
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-light ms-3">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

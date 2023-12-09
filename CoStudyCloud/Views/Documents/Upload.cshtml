@@ -1,19 +1,45 @@
 ﻿@model CoStudyCloud.Core.ViewModels.DocumentFormViewModel
 
-<h1>Document Upload Form</h1>
-<form asp-action="Upload" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control"/>
-        <span asp-validation-for="Title"></span>
+@{
+    ViewData["Title"] = "Upload Document";
+}
+
+<section class="form-section">
+    <div class="row justify-content-center">
+        <div class="col-12 mb-5">
+            <div class="section-title text-center">
+                <h2>Document Upload Form</h2>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-8 col-sm-12 col-12">
+            <form asp-action="Upload" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="StudyGroupId"></label>
+                    <select asp-for="StudyGroupId" class="form-select">
+                        <option>Software Engineering</option>
+                        <option>Data Science</option>
+                        <option>Machine Learning</option>
+                        <option>Cloud Computing</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DocumentFile"></label>
+                    <input asp-for="DocumentFile" accept=".pdf, .doc, .docx, .ppt, .pptx" />
+                    <span asp-validation-for="Title"></span>
+                    <p class="form-hint">
+                        * Please select a document to upload. You should only select a document with the following extensions: .pdf, .doc, .docx, .ppt, .pptx.
+                    </p>
+                </div>
+                <div class="form-group mt-5">
+                    <input type="submit" value="Upload Document" class="btn btn-success" />
+                    <a asp-action="Index" class="btn btn-light ms-3">Back</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <p>
-            Please select a document to upload. You should only select a document with the following extensions: .pdf, .doc, .docx, .ppt, .pptx.
-        </p>
-        <input asp-for="DocumentFile" accept=".pdf, .doc, .docx, .ppt, .pptx" />
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Upload Document" class="btn btn-success"/>
-    </div>
-</form>
+</section>

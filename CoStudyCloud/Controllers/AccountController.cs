@@ -96,5 +96,10 @@ namespace CoStudyCloud.Controllers
 
             return RedirectToAction(nameof(Login));
         }
+
+        public IActionResult Profile()
+        {
+            return View();
+        }
     }
 }

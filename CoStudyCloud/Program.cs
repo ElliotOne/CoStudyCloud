@@ -7,7 +7,9 @@ ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddSingleton<ICloudStorage, GoogleCloudStorage>();
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
 
 builder.Services.AddAuthentication(options =>
     {
