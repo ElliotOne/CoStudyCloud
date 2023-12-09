@@ -18,7 +18,7 @@ namespace CoStudyCloud.Persistence
             {
                 bool tablesAlreadyExist = false;
 
-                string query = $"SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users' LIMIT 1";
+                string query = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users' LIMIT 1";
 
                 using var command = connection.CreateSelectCommand(query);
                 using var reader = await command.ExecuteReaderAsync();
@@ -33,12 +33,11 @@ namespace CoStudyCloud.Persistence
                     await ExecuteDdlAsync(connection, @"
                         CREATE TABLE Users (
                             Id STRING(36) DEFAULT (GENERATE_UUID()),
-                            Username STRING(50),
                             Email STRING(100),
                             FirstName STRING(50),
                             LastName STRING(50),
                             GoogleId STRING(50),
-                            ProfilePicURL STRING(255),
+                            ProfileImageUrl STRING(255),
                             UserRole STRING(50),
                             CreateDate TIMESTAMP,
                             LastEditDate TIMESTAMP,
@@ -76,8 +75,8 @@ namespace CoStudyCloud.Persistence
                             Summary STRING(255),
                             Details STRING(MAX),
                             CreateDate TIMESTAMP,
-                            StartDateTime TIMESTAMP,
-                            EndDateTime TIMESTAMP,
+                            StartDate TIMESTAMP,
+                            EndDate TIMESTAMP,
                             CONSTRAINT FK_StudySession_StudyGroup FOREIGN KEY (StudyGroupId) REFERENCES StudyGroups(Id) ON DELETE CASCADE,
                         ) PRIMARY KEY (Id)");
 
@@ -99,7 +98,7 @@ namespace CoStudyCloud.Persistence
                             UploaderUserId STRING(36),
                             Title STRING(100),
                             FileName STRING(255),
-                            FileURL STRING(255),
+                            FileUrl STRING(255),
                             CreateDate TIMESTAMP,
                             CONSTRAINT FK_Document_StudyGroup FOREIGN KEY (StudyGroupId) REFERENCES StudyGroups(Id) ON DELETE CASCADE,
                             CONSTRAINT FK_Document_UploaderUser FOREIGN KEY (UploaderUserId) REFERENCES Users(Id) ON DELETE CASCADE,
