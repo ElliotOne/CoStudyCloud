@@ -966,3 +966,17 @@ textarea:focus::-webkit-input-placeholder {
     .form-section > div {
         margin: 50px 0;
     }
+
+/* -----------------------
+     Error Section
+-------------------------*/
+
+.error-section {
+    margin: 60px 0 120px 0;
+    background-color: #ffffff;
+    padding: 20px 40px;
+    border: none;
+    -webkit-box-shadow: 0px 1px 2px 1px rgba(154, 154, 204, 0.22);
+    -moz-box-shadow: 0px 1px 2px 1px rgba(154, 154, 204, 0.22);
+    box-shadow: 0px 1px 2px 1px rgba(154, 154, 204, 0.22);
+}
