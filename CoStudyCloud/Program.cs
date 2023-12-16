@@ -1,11 +1,17 @@
 using CoStudyCloud.Infrastructure.CloudStorage;
+using CoStudyCloud.Infrastructure.GoogleCalendar;
 using CoStudyCloud.Persistence;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
+builder.Services.Configure<GoogleCalendarSettings>(builder.Configuration.GetSection(nameof(GoogleCalendarSettings)));
+builder.Services.AddSingleton<IGoogleCalendarSettings>(s =>
+    s.GetRequiredService<IOptions<GoogleCalendarSettings>>().Value);
+builder.Services.AddScoped<IGoogleCalendarService, GoogleCalendarService>();
 builder.Services.AddSingleton<ICloudStorage, GoogleCloudStorage>();
 builder.Services
     .AddControllersWithViews()
@@ -22,6 +28,9 @@ builder.Services.AddAuthentication(options =>
     {
         options.ClientId = configuration.GetSection("GoogleOAuth:ClientId").Value!;
         options.ClientSecret = configuration.GetSection("GoogleOAuth:ClientSecret").Value!;
+        options.SaveTokens = true;
+        options.Scope.Add(Google.Apis.Calendar.v3.CalendarService.Scope.Calendar);
+        options.AccessType = "offline";
     });
 
 builder.Services.AddAuthorization();

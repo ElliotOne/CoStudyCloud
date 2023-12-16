@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Auth" Version="1.64.0" />
+    <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.64.0" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.64.0.3248" />
     <PackageReference Include="Google.Cloud.Spanner.Data" Version="4.6.0" />
     <PackageReference Include="Google.Cloud.Storage.V1" Version="4.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.0" />
