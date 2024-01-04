@@ -14,7 +14,7 @@ namespace CoStudyCloud.Core.ViewModels
         [Display(Name = "Last Name")]
         public string? LastName { get; set; }
 
-        public string? ProfilePicURL { get; set; }
+        public string? ProfileImageUrl { get; set; }
 
         [MaxFileSize(2 * 1024 * 1024)]
         [PermittedExtensions(".jpg", ".jpeg", ".png")]

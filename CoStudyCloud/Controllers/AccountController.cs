@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using CoStudyCloud.Core.Constants;
+using CoStudyCloud.Core.Models;
+using CoStudyCloud.Core.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +12,12 @@ namespace CoStudyCloud.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly IUserRepository _userRepository;
+        public AccountController(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
         [AllowAnonymous]
         public IActionResult Login()
         {
@@ -20,7 +29,6 @@ namespace CoStudyCloud.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string? returnUrl)
         {
-
             // Request a redirect to the external login provider
             return new ChallengeResult(
                 GoogleDefaults.AuthenticationScheme,
@@ -47,17 +55,39 @@ namespace CoStudyCloud.Controllers
                 //Check if the redirection has been done via google or any other links
                 if (authenticateResult.Principal.Identities.ToList()[0].AuthenticationType?.ToLower() == "google")
                 {
-                    //get google account id for any operation to be carried out on the basis of the id
-                    var googleAccountId = authenticateResult.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
                     //claim value initialization as mentioned on the startup file with options.DefaultScheme = "Application"
                     var claimsIdentity = new ClaimsIdentity("Application");
 
-                    claimsIdentity.AddClaim(authenticateResult.Principal.FindFirst(ClaimTypes.GivenName)!);// Given Name Of The User
-                    claimsIdentity.AddClaim(authenticateResult.Principal.FindFirst(ClaimTypes.Surname)!);// Surname Of The User
-                    claimsIdentity.AddClaim(authenticateResult!.Principal.FindFirst(ClaimTypes.Email)!); // Email Address of The User
+                    Claim idClaim = authenticateResult!.Principal.FindFirst(ClaimTypes.NameIdentifier)!;// Google Id of The User
+                    Claim emailClaim = authenticateResult!.Principal.FindFirst(ClaimTypes.Email)!;// Email Address of The User
+                    Claim firstNameClaim = authenticateResult!.Principal.FindFirst(ClaimTypes.GivenName)!;// Given Name Of The User
+                    Claim lastNameClaim = authenticateResult.Principal.FindFirst(ClaimTypes.Surname)!;// Surname Of The User
 
-                    //TODO: Create user in database if it doesn't already exist
+                    claimsIdentity.AddClaim(emailClaim);
+                    claimsIdentity.AddClaim(firstNameClaim);
+                    claimsIdentity.AddClaim(lastNameClaim);
+
+                    var role = emailClaim.Value == WhiteListAdminsConstant.Default
+                        ? UserRolesConstant.SystemAdmin
+                        : UserRolesConstant.Learner;
+
+                    //Save the user in database for the first log in
+                    if (!await _userRepository.Exists(emailClaim.Value))
+                    {
+                        var user = new User()
+                        {
+                            Email = emailClaim.Value,
+                            FirstName = firstNameClaim.Value,
+                            LastName = lastNameClaim.Value,
+                            GoogleId = idClaim.Value,
+                            ProfileImageUrl = authenticateResult.Principal.FindFirst("picture")?.Value,
+                            UserRole = role,
+                            CreateDate = DateTime.UtcNow,
+                            LastEditDate = DateTime.UtcNow
+                        };
+
+                        await _userRepository.Add(user);
+                    }
 
                     await HttpContext.SignInAsync("Application", new ClaimsPrincipal(claimsIdentity));
 
