@@ -22,6 +22,9 @@ builder.Services
     .AddControllersWithViews()
     .AddRazorRuntimeCompilation();
 
+//Add AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = "Application";

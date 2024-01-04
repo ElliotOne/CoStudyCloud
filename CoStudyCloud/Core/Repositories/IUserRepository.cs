@@ -8,10 +8,23 @@ namespace CoStudyCloud.Core.Repositories
     public interface IUserRepository
     {
         /// <summary>
-        /// Add new user to database
+        /// Get user by its email
+        /// </summary>
+        /// <param name="email">Email</param>
+        /// <returns>User with the given email or null</returns>
+        public Task<User?> GetByEmail(string email);
+
+        /// <summary>
+        /// Add new user
         /// </summary>
         /// <param name="user">User</param>
         public Task Add(User user);
+
+        /// <summary>
+        /// Update an existing user
+        /// </summary>
+        /// <param name="user">Update user</param>
+        public Task Update(User user);
 
         /// <summary>
         /// Check whether the user already exists

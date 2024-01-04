@@ -1,6 +1,8 @@
-﻿using CoStudyCloud.Core.Constants;
+﻿using AutoMapper;
+using CoStudyCloud.Core.Constants;
 using CoStudyCloud.Core.Models;
 using CoStudyCloud.Core.Repositories;
+using CoStudyCloud.Core.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
@@ -13,9 +15,12 @@ namespace CoStudyCloud.Controllers
     public class AccountController : Controller
     {
         private readonly IUserRepository _userRepository;
-        public AccountController(IUserRepository userRepository)
+        private readonly IMapper _mapper;
+
+        public AccountController(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -127,9 +132,47 @@ namespace CoStudyCloud.Controllers
             return RedirectToAction(nameof(Login));
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            return View();
+            var email = User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var user = await _userRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var profileFormViewModel = _mapper.Map<User, ProfileFormViewModel>(user);
+
+            return View(profileFormViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Profile(ProfileFormViewModel profileFormViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Profile", profileFormViewModel);
+            }
+
+            var existingUser = await _userRepository.GetByEmail(profileFormViewModel.Email!);
+
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            // Update properties of the existing user with the values from the view model
+            existingUser.FirstName = profileFormViewModel.FirstName;
+            existingUser.LastName = profileFormViewModel.LastName;
+            existingUser.ProfileImageUrl = profileFormViewModel.ProfileImageUrl;
+            existingUser.LastEditDate = DateTime.UtcNow;
+
+            await _userRepository.Update(existingUser);
+
+            return RedirectToAction(nameof(Profile));
         }
     }
 }
