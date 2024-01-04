@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
+builder.Services.AddScoped<IStudyGroupRepository, StudyGroupRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.Configure<GoogleCalendarSettings>(builder.Configuration.GetSection(nameof(GoogleCalendarSettings)));
