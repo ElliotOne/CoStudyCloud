@@ -25,9 +25,59 @@ namespace CoStudyCloud.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var email = User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var user = await _userRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var groupsWithJoinStatus =
+                await _studyGroupRepository.GetStudyGroupsWithJoinStatus(user.Id!);
+
+            var groupIndexViewModel = new GroupIndexViewModel()
+            {
+                StudyGroupWithJoinStatusViewModels = _mapper.Map<
+                    IEnumerable<StudyGroupWithJoinStatus>, IEnumerable<StudyGroupWithJoinStatusViewModel>>(
+                    groupsWithJoinStatus)
+            };
+
+            return View(groupIndexViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Join(string groupId)
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var user = await _userRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                return Json(BadRequest());
+            }
+
+            var userStudyGroup = new UserStudyGroup()
+            {
+                UserId = user.Id,
+                StudyGroupId = groupId
+            };
+
+            await _studyGroupRepository.AddUserToStudyGroup(userStudyGroup);
+
+            return Json(Ok());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Leave(string mappingId)
+        {
+            await _studyGroupRepository.RemoveUserFromStudyGroup(mappingId);
+
+            return Json(Ok());
         }
 
         public IActionResult Create()

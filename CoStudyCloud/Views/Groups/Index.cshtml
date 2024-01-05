@@ -1,3 +1,79 @@
-﻿@{
+﻿@model CoStudyCloud.Core.ViewModels.GroupIndexViewModel
+
+@{
     ViewData["Title"] = "Groups";
 }
+
+@section Scripts {
+    <script>
+        Site.InitializeJoinButton(".btn-join", "@Url.Action("Join")");
+        Site.InitializeLeaveButton(".btn-leave", "@Url.Action("Leave")");
+    </script>
+}
+
+<section class="table-section">
+    <div class="row justify-content-center">
+        <div class="col-12 mb-5">
+            <div class="section-title text-center">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <div class="section-buttons">
+                <a asp-action="Create" class="btn btn-success">
+                    <span class="fa fa-plus"></span>
+                    Create
+                </a>
+            </div>
+        </div>
+        <div class="col-12">
+
+            @if (Model.StudyGroupWithJoinStatusViewModels != null)
+            {
+                <table id="jq-table" class="table table-striped table-bordered dt-responsive">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(x => x.StudyGroupWithJoinStatusViewModels!.Single().Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.StudyGroupWithJoinStatusViewModels!.Single().Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.StudyGroupWithJoinStatusViewModels!.Single().CreateDate)
+                            </th>
+                            <th class="no-sort">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var group in Model.StudyGroupWithJoinStatusViewModels)
+                        {
+                            <tr role="row" class="odd">
+                                <td>@group.Title</td>
+                                <td>@group.Description</td>
+                                <td>@group.CreateDate</td>
+                                <td>
+
+                                    @if (group.IsJoined)
+                                    {
+                                        <button class="btn btn-danger table-btn btn-leave" title="Leave" data-id="@group.MappingId" data-nextId="@group.StudyGroupId">
+                                            <span class="fas fa-user-times"></span>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary table-btn btn-join" title="Join" data-id="@group.StudyGroupId">
+                                            <span class="fa fa-user-plus"></span>
+                                        </button>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+
+        </div>
+    </div>
+</section>

@@ -633,7 +633,7 @@ a {
         border: 1px solid #e6e6f2;
     }
 
-.table-striped tbody tr:nth-of-type(odd) {
+.table-striped tbody tr:nth-of-type(2n+1) {
     background-color: rgba(230, 230, 242, .5);
 }
 
