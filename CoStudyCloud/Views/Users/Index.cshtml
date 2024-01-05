@@ -1,3 +1,57 @@
-﻿@{
+﻿@model CoStudyCloud.Core.ViewModels.UserIndexViewModel
+
+@{
     ViewData["Title"] = "Users";
 }
+
+<section class="table-section">
+    <div class="row justify-content-center">
+        <div class="col-12 mb-5">
+            <div class="section-title text-center">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+        </div>
+        <div class="col-12">
+
+            @if (Model.UserEntryViewModels != null)
+            {
+                <table id="jq-table" class="table table-striped table-bordered dt-responsive">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(x => x.UserEntryViewModels!.Single().Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.UserEntryViewModels!.Single().FirstName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.UserEntryViewModels!.Single().LastName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.UserEntryViewModels!.Single().UserRole)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.UserEntryViewModels!.Single().CreateDate)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var user in Model.UserEntryViewModels)
+                        {
+                            <tr role="row" class="odd">
+                                <td>@user.Email</td>
+                                <td>@user.FirstName</td>
+                                <td>@user.LastName</td>
+                                <td>@user.UserRole</td>
+                                <td>@user.CreateDate</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+
+        </div>
+    </div>
+</section>

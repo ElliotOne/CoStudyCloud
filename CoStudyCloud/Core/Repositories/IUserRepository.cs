@@ -8,6 +8,12 @@ namespace CoStudyCloud.Core.Repositories
     public interface IUserRepository
     {
         /// <summary>
+        /// Get all users
+        /// </summary>
+        /// <returns>All users</returns>
+        Task<IEnumerable<User>> GetUsers();
+
+        /// <summary>
         /// Get user by its email
         /// </summary>
         /// <param name="email">Email</param>

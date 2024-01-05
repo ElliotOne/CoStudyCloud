@@ -20,6 +20,7 @@ namespace CoStudyCloud.Core
             CreateMap<GroupFormViewModel, StudyGroup>();
 
             CreateMap<User, ProfileFormViewModel>();
+            CreateMap<User, UserEntryViewModel>();
         }
     }
 }

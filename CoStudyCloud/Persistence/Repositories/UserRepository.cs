@@ -16,6 +16,52 @@ namespace CoStudyCloud.Persistence.Repositories
             _configuration = configuration;
         }
 
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
+            await connection.OpenAsync();
+
+            string query = @"
+                SELECT
+                    Id,
+                    Email,
+                    FirstName,
+                    LastName,
+                    GoogleId,
+                    ProfileImageUrl,
+                    UserRole,
+                    CreateDate,
+                    LastEditDate
+                FROM
+                    Users";
+
+            using var command = new SpannerCommand(query, connection);
+
+            var users = new List<User>();
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                var user = new User
+                {
+                    Id = reader[nameof(User.Id)].ToString(),
+                    Email = reader[nameof(User.Email)].ToString(),
+                    FirstName = reader[nameof(User.FirstName)].ToString(),
+                    LastName = reader[nameof(User.LastName)].ToString(),
+                    GoogleId = reader[nameof(User.GoogleId)].ToString(),
+                    ProfileImageUrl = reader[nameof(User.ProfileImageUrl)].ToString(),
+                    UserRole = reader[nameof(User.UserRole)].ToString(),
+                    CreateDate = (DateTime)reader[nameof(User.CreateDate)],
+                    LastEditDate = (DateTime)reader[nameof(User.LastEditDate)]
+                };
+
+                users.Add(user);
+            }
+
+            return users;
+        }
+
         public async Task<User?> GetByEmail(string email)
         {
             using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
