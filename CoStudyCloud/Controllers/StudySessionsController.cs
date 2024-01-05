@@ -34,9 +34,28 @@ namespace CoStudyCloud.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var email = User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var user = await _userRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var sessionsWithGroups =
+                await _studySessionRepository.GetStudySessionsWithGroups(user.Id!);
+
+            var studySessionIndexViewModel = new StudySessionIndexViewModel()
+            {
+                StudySessionWithGroupViewModels = _mapper.Map<
+                IEnumerable<StudySessionWithGroup>, IEnumerable<StudySessionWithGroupViewModel>>(
+                    sessionsWithGroups)
+            };
+
+            return View(studySessionIndexViewModel);
         }
 
         public async Task<IActionResult> Create()

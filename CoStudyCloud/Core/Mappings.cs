@@ -14,6 +14,7 @@ namespace CoStudyCloud.Core
             CreateMap<StudyGroupWithJoinStatus, StudyGroupWithJoinStatusViewModel>();
 
             CreateMap<StudySessionFormViewModel, StudySession>();
+            CreateMap<StudySessionWithGroup, StudySessionWithGroupViewModel>();
 
             CreateMap<StudyGroup, GroupFormViewModel>();
             CreateMap<GroupFormViewModel, StudyGroup>();

@@ -16,6 +16,51 @@ namespace CoStudyCloud.Persistence.Repositories
             _configuration = configuration;
         }
 
+        public async Task<IEnumerable<StudySessionWithGroup>> GetStudySessionsWithGroups(string userId)
+        {
+            using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
+            await connection.OpenAsync();
+
+            string query = @"
+                SELECT
+                    s.Summary,
+                    s.StartDate,
+                    s.EndDate,
+                    sg.Title AS StudyGroupTitle
+                FROM
+                    StudySessions s
+                INNER JOIN
+                    StudyGroups sg ON s.StudyGroupId = sg.Id
+                WHERE
+                    s.Id IN (
+                        SELECT uss.StudySessionId
+                        FROM User_StudySession_Mapping uss
+                        WHERE uss.UserId = @UserId
+                    )";
+
+            using var command = new SpannerCommand(query, connection);
+            command.Parameters.Add(nameof(UserStudySession.UserId), SpannerDbType.String).Value = userId;
+
+            var studySessionsWithGroups = new List<StudySessionWithGroup>();
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                var studySessionWithGroup = new StudySessionWithGroup
+                {
+                    Summary = reader["Summary"]?.ToString(),
+                    StartDate = (DateTime)reader["StartDate"],
+                    EndDate = (DateTime)reader["EndDate"],
+                    StudyGroupTitle = reader["StudyGroupTitle"]?.ToString()
+                };
+
+                studySessionsWithGroups.Add(studySessionWithGroup);
+            }
+
+            return studySessionsWithGroups;
+        }
+
         public async Task Add(StudySession studySession)
         {
             using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
