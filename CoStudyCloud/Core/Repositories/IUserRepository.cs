@@ -12,19 +12,19 @@ namespace CoStudyCloud.Core.Repositories
         /// </summary>
         /// <param name="email">Email</param>
         /// <returns>User with the given email or null</returns>
-        public Task<User?> GetByEmail(string email);
+        Task<User?> GetByEmail(string email);
 
         /// <summary>
-        /// Add new user
+        /// Add a new user
         /// </summary>
         /// <param name="user">User</param>
-        public Task Add(User user);
+        Task Add(User user);
 
         /// <summary>
         /// Update an existing user
         /// </summary>
         /// <param name="user">Update user</param>
-        public Task Update(User user);
+        Task Update(User user);
 
         /// <summary>
         /// Check whether the user already exists
