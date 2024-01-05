@@ -1,0 +1,55 @@
+﻿@using CoStudyCloud.Core.ViewModels
+@model CoStudyCloud.Core.ViewModels.StudySessionFormViewModel
+
+@{
+    ViewData["Title"] = "Create Study Session";
+}
+
+<section class="form-section">
+    <div class="row justify-content-center">
+        <div class="col-12 mb-5">
+            <div class="section-title text-center">
+                <h2>Create Study Session Form</h2>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-8 col-sm-12 col-12">
+            <form asp-action="Create">
+                <div class="form-group">
+                    <label asp-for="StudyGroupId"></label>
+                    <select asp-for="StudyGroupId"
+                            asp-items="(SelectList)ViewData[nameof(StudySessionFormViewModel.StudyGroupId)]!"
+                            class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Summary"></label>
+                    <input asp-for="Summary" class="form-control" />
+                    <span asp-validation-for="Summary"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Description"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartDate"></label>
+                    <input asp-for="StartDate" class="form-control" />
+                    <span asp-validation-for="StartDate"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndDate"></label>
+                    <input asp-for="EndDate" class="form-control" />
+                    <span asp-validation-for="EndDate"></span>
+                </div>
+                <div class="form-group mt-5">
+                    <input type="submit" value="Create" class="btn btn-success" />
+                    <a asp-action="Index" class="btn btn-light ms-3">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

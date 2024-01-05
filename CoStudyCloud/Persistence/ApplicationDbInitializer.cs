@@ -60,7 +60,6 @@ namespace CoStudyCloud.Persistence
                             Id STRING(36) DEFAULT (GENERATE_UUID()),
                             UserId STRING(36),
                             StudyGroupId STRING(36),
-                            ApprovalStatus INT64,
                             CONSTRAINT FK_UserStudyGroup_UserId FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
                             CONSTRAINT FK_UserStudyGroup_GroupId FOREIGN KEY (StudyGroupId) REFERENCES StudyGroups(Id) ON DELETE CASCADE
                         ) PRIMARY KEY (Id)");
@@ -73,7 +72,7 @@ namespace CoStudyCloud.Persistence
                             Title STRING(100),
                             CalendarSyncId STRING(50),
                             Summary STRING(255),
-                            Details STRING(MAX),
+                            Description STRING(MAX),
                             CreateDate TIMESTAMP,
                             StartDate TIMESTAMP,
                             EndDate TIMESTAMP,

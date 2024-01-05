@@ -57,6 +57,72 @@ namespace CoStudyCloud.Persistence.Repositories
             return studyGroups;
         }
 
+        public async Task<IEnumerable<StudyGroup>> GetStudyGroups(string adminUserId)
+        {
+            using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
+            await connection.OpenAsync();
+
+            string query = @"
+                SELECT
+                    sg.Id,
+                    sg.Title,
+                    sg.Description,
+                    sg.CreateDate
+                FROM StudyGroups sg
+                JOIN User_StudyGroup_Mapping usgm ON sg.Id = usgm.StudyGroupId
+                WHERE
+                    sg.AdminUserId = @AdminUserId AND
+                    usgm.UserId = @AdminUserId";
+
+            using var command = new SpannerCommand(query, connection);
+            command.Parameters.Add(nameof(StudyGroup.AdminUserId), SpannerDbType.String).Value = adminUserId;
+
+            var studyGroups = new List<StudyGroup>();
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                var studyGroup = new StudyGroup
+                {
+                    Id = reader["Id"]?.ToString(),
+                    Title = reader["Title"]?.ToString(),
+                    Description = reader["Description"]?.ToString(),
+                    CreateDate = (DateTime)reader["CreateDate"]
+                };
+
+                studyGroups.Add(studyGroup);
+            }
+
+            return studyGroups;
+        }
+
+        public async Task<IEnumerable<string>> GetEmailsInStudyGroup(string id)
+        {
+            using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
+            await connection.OpenAsync();
+
+            string query = @"
+                SELECT u.Email
+                FROM Users u
+                JOIN User_StudyGroup_Mapping usgm ON u.Id = usgm.UserId
+                WHERE usgm.StudyGroupId = @StudyGroupId";
+
+            using var command = new SpannerCommand(query, connection);
+            command.Parameters.Add(nameof(UserStudyGroup.StudyGroupId), SpannerDbType.String).Value = id;
+
+            var emails = new List<string>();
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                emails.Add(reader.GetFieldValue<string>("Email"));
+            }
+
+            return emails;
+        }
+
         public async Task Add(StudyGroup studyGroup)
         {
             using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
