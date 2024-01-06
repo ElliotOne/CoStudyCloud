@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CoStudyCloud.Core.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoStudyCloud.Core.ViewModels
 {
@@ -7,9 +8,11 @@ namespace CoStudyCloud.Core.ViewModels
         public string? Email { get; set; }
 
         [Display(Name = "First Name")]
+        [MaxLength(50, ErrorMessage = ValidationMessagesConstant.MaxLengthMsg)]
         public string? FirstName { get; set; }
 
         [Display(Name = "Last Name")]
+        [MaxLength(50, ErrorMessage = ValidationMessagesConstant.MaxLengthMsg)]
         public string? LastName { get; set; }
 
         public string? ProfileImageUrl { get; set; }

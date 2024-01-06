@@ -49,10 +49,10 @@ namespace CoStudyCloud.Persistence.Repositories
             {
                 var studySessionWithGroup = new StudySessionWithGroup
                 {
-                    Summary = reader["Summary"]?.ToString(),
-                    StartDate = (DateTime)reader["StartDate"],
-                    EndDate = (DateTime)reader["EndDate"],
-                    StudyGroupTitle = reader["StudyGroupTitle"]?.ToString()
+                    Summary = reader[nameof(StudySessionWithGroup.Summary)]?.ToString(),
+                    StartDate = (DateTime)reader[nameof(StudySessionWithGroup.StartDate)],
+                    EndDate = (DateTime)reader[nameof(StudySessionWithGroup.EndDate)],
+                    StudyGroupTitle = reader[nameof(StudySessionWithGroup.StudyGroupTitle)]?.ToString()
                 };
 
                 studySessionsWithGroups.Add(studySessionWithGroup);

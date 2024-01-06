@@ -40,13 +40,13 @@
                     </thead>
                     <tbody>
 
-                        @foreach (var group in Model.StudySessionWithGroupViewModels)
+                        @foreach (var session in Model.StudySessionWithGroupViewModels)
                         {
-                            <tr role="row" class="odd">
-                                <td>@group.Summary</td>
-                                <td>@group.StudyGroupTitle</td>
-                                <td>@group.StartDate</td>
-                                <td>@group.EndDate</td>
+                            <tr role="row">
+                                <td>@session.Summary</td>
+                                <td>@session.StudyGroupTitle</td>
+                                <td>@session.StartDate</td>
+                                <td>@session.EndDate</td>
                             </tr>
                         }
 
