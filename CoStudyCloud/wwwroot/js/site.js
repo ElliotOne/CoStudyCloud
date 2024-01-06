@@ -36,10 +36,29 @@
         });
     }
 
+    var initializeDocumentDeleteButton = function documentDeleteButton(buttonSelector, url) {
+        $("body").on("click", buttonSelector, function () {
+            $.ajax({
+                url: url,
+                dataType: "json",
+                method: "POST",
+                data: {
+                    documentId: $(this).attr("data-id")
+                },
+                success: function (data) {
+                    if (data.statusCode != null && data.statusCode === 200) {
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+    }
+
 
     return {
         InitializeJoinButton: initializeJoinButton,
-        InitializeLeaveButton: initializeLeaveButton
+        InitializeLeaveButton: initializeLeaveButton,
+        InitializeDocumentDeleteButton: initializeDocumentDeleteButton
     }
 
 })();

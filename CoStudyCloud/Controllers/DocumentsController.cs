@@ -94,6 +94,31 @@ namespace CoStudyCloud.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(string documentId)
+        {
+            var document = await _documentRepository.GetById(documentId);
+
+            var email = User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var user = await _userRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                return Json(BadRequest());
+            }
+
+            if (document == null || document.UploaderUserId != user.Id)
+            {
+                return Json(BadRequest());
+            }
+
+            await _documentRepository.Delete(documentId);
+            await _cloudStorage.DeleteFileAsync(document.FileName!);
+
+            return Json(Ok());
+        }
+
         [NonAction]
         public async Task<SelectList> GetStudyGroups()
         {

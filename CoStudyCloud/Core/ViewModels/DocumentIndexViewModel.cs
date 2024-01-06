@@ -9,6 +9,8 @@ namespace CoStudyCloud.Core.ViewModels
 
     public class DocumentWithOwnerStatusViewModel
     {
+        public string? Id { get; set; }
+
         public string? Title { get; set; }
 
         public string? FileUrl { get; set; }

@@ -4,6 +4,13 @@
     ViewData["Title"] = "Documents";
 }
 
+@section Scripts
+{
+    <script>
+        Site.InitializeDocumentDeleteButton(".btn-delete", "@Url.Action("Delete")");
+    </script>
+}
+
 <section class="table-section">
     <div class="row justify-content-center">
         <div class="col-12 mb-5">
@@ -55,7 +62,7 @@
 
                                     @if (document.IsOwned)
                                     {
-                                        <a class="btn btn-danger table-btn" title="Delete">
+                                        <a class="btn btn-danger table-btn btn-delete" title="Delete" data-id="@document.Id">
                                             <span class="fa fa-trash"></span>
                                         </a>
                                     }

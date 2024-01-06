@@ -15,9 +15,22 @@ namespace CoStudyCloud.Core.Repositories
         Task<IEnumerable<DocumentWithOwnerStatus>> GetDocumentsWithOwnerStatus(string userId);
 
         /// <summary>
+        /// Get document by its id
+        /// </summary>
+        /// <param name="documentId">Document id</param>
+        /// <returns>Document with the given id or null</returns>
+        Task<Document?> GetById(string documentId);
+
+        /// <summary>
         /// Add a new document
         /// </summary>
         /// <param name="document">Document</param>
         Task Add(Document document);
+
+        /// <summary>
+        /// Delete an existing document
+        /// </summary>
+        /// <param name="documentId">Document id</param>
+        Task Delete(string documentId);
     }
 }

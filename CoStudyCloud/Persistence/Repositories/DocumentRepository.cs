@@ -64,6 +64,41 @@ namespace CoStudyCloud.Persistence.Repositories
             return documentsWithStatus;
         }
 
+        public async Task<Document?> GetById(string documentId)
+        {
+            using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
+            await connection.OpenAsync();
+
+            string query = @"
+                SELECT 
+                    Id, StudyGroupId, UploaderUserId, Title, FileName, FileUrl, CreateDate
+                FROM 
+                    Documents
+                WHERE 
+                    Id = @DocumentId";
+
+            using var command = new SpannerCommand(query, connection);
+            command.Parameters.Add("DocumentId", SpannerDbType.String).Value = documentId;
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return new Document
+                {
+                    Id = reader[nameof(Document.Id)]?.ToString(),
+                    StudyGroupId = reader[nameof(Document.StudyGroupId)]?.ToString(),
+                    UploaderUserId = reader[nameof(Document.UploaderUserId)]?.ToString(),
+                    Title = reader[nameof(Document.Title)]?.ToString(),
+                    FileName = reader[nameof(Document.FileName)]?.ToString(),
+                    FileUrl = reader[nameof(Document.FileUrl)]?.ToString(),
+                    CreateDate = (DateTime)reader[nameof(Document.CreateDate)],
+                };
+            }
+
+            return null;
+        }
+
         public async Task Add(Document document)
         {
             using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
@@ -94,6 +129,23 @@ namespace CoStudyCloud.Persistence.Repositories
             command.Parameters.Add(nameof(Document.FileName), SpannerDbType.String).Value = document.FileName;
             command.Parameters.Add(nameof(Document.FileUrl), SpannerDbType.String).Value = document.FileUrl;
             command.Parameters.Add(nameof(Document.CreateDate), SpannerDbType.Timestamp).Value = document.CreateDate;
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task Delete(string documentId)
+        {
+            using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
+            await connection.OpenAsync();
+
+            string query = @"
+                DELETE FROM 
+                    Documents
+                WHERE 
+                    Id = @DocumentId";
+
+            using var command = new SpannerCommand(query, connection);
+            command.Parameters.Add("DocumentId", SpannerDbType.String).Value = documentId;
 
             await command.ExecuteNonQueryAsync();
         }
