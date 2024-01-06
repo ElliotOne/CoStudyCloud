@@ -6,12 +6,14 @@ using CoStudyCloud.Infrastructure.GoogleCalendar;
 using Google.Apis.Calendar.v3.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
 namespace CoStudyCloud.Controllers
 {
+    [Authorize]
     public class StudySessionsController : Controller
     {
         private readonly IStudySessionRepository _studySessionRepository;

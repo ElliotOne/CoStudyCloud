@@ -2,10 +2,12 @@
 using CoStudyCloud.Core.Models;
 using CoStudyCloud.Core.Repositories;
 using CoStudyCloud.Core.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoStudyCloud.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly IUserRepository _userRepository;

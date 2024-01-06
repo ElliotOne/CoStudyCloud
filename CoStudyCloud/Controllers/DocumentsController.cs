@@ -4,12 +4,14 @@ using CoStudyCloud.Core.Repositories;
 using CoStudyCloud.Core.ViewModels;
 using CoStudyCloud.Infrastructure.CloudStorage;
 using CoStudyCloud.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
 namespace CoStudyCloud.Controllers
 {
+    [Authorize]
     public class DocumentsController : Controller
     {
         private readonly IDocumentRepository _documentRepository;
