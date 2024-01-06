@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CoStudyCloud.Core.Constants;
 using CoStudyCloud.Core.Models;
 using CoStudyCloud.Core.Repositories;
 using CoStudyCloud.Core.ViewModels;
@@ -80,6 +81,7 @@ namespace CoStudyCloud.Controllers
             return Json(Ok());
         }
 
+        [Authorize(Roles = UserRolesConstant.SystemAdmin)]
         public IActionResult Create()
         {
             return View();
@@ -87,6 +89,7 @@ namespace CoStudyCloud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = UserRolesConstant.SystemAdmin)]
         public async Task<IActionResult> Create(GroupFormViewModel groupFormViewModel)
         {
             if (!ModelState.IsValid)

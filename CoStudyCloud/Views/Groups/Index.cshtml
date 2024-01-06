@@ -1,4 +1,5 @@
-﻿@model CoStudyCloud.Core.ViewModels.GroupIndexViewModel
+﻿@using CoStudyCloud.Core.Constants
+@model CoStudyCloud.Core.ViewModels.GroupIndexViewModel
 
 @{
     ViewData["Title"] = "Groups";
@@ -17,12 +18,17 @@
             <div class="section-title text-center">
                 <h2>@ViewData["Title"]</h2>
             </div>
-            <div class="section-buttons">
-                <a asp-action="Create" class="btn btn-success">
-                    <span class="fa fa-plus"></span>
-                    Create
-                </a>
-            </div>
+
+            @if (User.IsInRole(UserRolesConstant.SystemAdmin))
+            {
+                <div class="section-buttons">
+                    <a asp-action="Create" class="btn btn-success">
+                        <span class="fa fa-plus"></span>
+                        Create
+                    </a>
+                </div>
+            }
+
         </div>
         <div class="col-12">
 

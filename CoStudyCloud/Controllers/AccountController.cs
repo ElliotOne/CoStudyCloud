@@ -76,6 +76,8 @@ namespace CoStudyCloud.Controllers
                         ? UserRolesConstant.SystemAdmin
                         : UserRolesConstant.Learner;
 
+                    claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role));
+
                     //Save the user in database for the first log in
                     if (!await _userRepository.Exists(emailClaim.Value))
                     {
