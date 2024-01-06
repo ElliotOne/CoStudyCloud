@@ -43,12 +43,46 @@ namespace CoStudyCloud.Persistence.Repositories
             {
                 var studyGroup = new StudyGroupWithJoinStatus
                 {
-                    StudyGroupId = reader["StudyGroupId"]?.ToString(),
-                    MappingId = reader["MappingId"]?.ToString(),
-                    Title = reader["Title"]?.ToString(),
-                    Description = reader["Description"]?.ToString(),
-                    CreateDate = (DateTime)reader["CreateDate"],
-                    IsJoined = !DBNull.Value.Equals(reader["MappingId"])
+                    StudyGroupId = reader[nameof(StudyGroupWithJoinStatus.StudyGroupId)]?.ToString(),
+                    MappingId = reader[nameof(StudyGroupWithJoinStatus.MappingId)]?.ToString(),
+                    Title = reader[nameof(StudyGroupWithJoinStatus.Title)]?.ToString(),
+                    Description = reader[nameof(StudyGroupWithJoinStatus.Description)]?.ToString(),
+                    CreateDate = (DateTime)reader[nameof(StudyGroupWithJoinStatus.CreateDate)],
+                    IsJoined = !DBNull.Value.Equals(reader[nameof(StudyGroupWithJoinStatus.MappingId)])
+                };
+
+                studyGroups.Add(studyGroup);
+            }
+
+            return studyGroups;
+        }
+
+        public async Task<IEnumerable<StudyGroup>> GetAllStudyGroupsByUserId(string userId)
+        {
+            using var connection = new SpannerConnection(_configuration.GetConnectionString("SpannerConnection"));
+            await connection.OpenAsync();
+
+            string query = @"
+                SELECT StudyGroups.*
+                FROM StudyGroups
+                JOIN User_StudyGroup_Mapping ON StudyGroups.Id = User_StudyGroup_Mapping.StudyGroupId
+                WHERE User_StudyGroup_Mapping.UserId = @UserId";
+
+            using var command = new SpannerCommand(query, connection);
+            command.Parameters.Add(nameof(UserStudyGroup.UserId), SpannerDbType.String).Value = userId;
+
+            var studyGroups = new List<StudyGroup>();
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                var studyGroup = new StudyGroup
+                {
+                    Id = reader[nameof(StudyGroup.Id)]?.ToString(),
+                    Title = reader[nameof(StudyGroup.Title)]?.ToString(),
+                    Description = reader[nameof(StudyGroup.Description)]?.ToString(),
+                    CreateDate = (DateTime)reader[nameof(StudyGroupWithJoinStatus.CreateDate)],
                 };
 
                 studyGroups.Add(studyGroup);
@@ -85,10 +119,10 @@ namespace CoStudyCloud.Persistence.Repositories
             {
                 var studyGroup = new StudyGroup
                 {
-                    Id = reader["Id"]?.ToString(),
-                    Title = reader["Title"]?.ToString(),
-                    Description = reader["Description"]?.ToString(),
-                    CreateDate = (DateTime)reader["CreateDate"]
+                    Id = reader[nameof(StudyGroup.Id)]?.ToString(),
+                    Title = reader[nameof(StudyGroup.Title)]?.ToString(),
+                    Description = reader[nameof(StudyGroup.Description)]?.ToString(),
+                    CreateDate = (DateTime)reader[nameof(StudyGroup.CreateDate)]
                 };
 
                 studyGroups.Add(studyGroup);

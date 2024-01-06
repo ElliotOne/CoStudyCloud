@@ -11,6 +11,8 @@ namespace CoStudyCloud.Core
     {
         public Mappings()
         {
+            CreateMap<DocumentFormViewModel, Document>();
+
             CreateMap<StudyGroupWithJoinStatus, StudyGroupWithJoinStatusViewModel>();
 
             CreateMap<StudySessionFormViewModel, StudySession>();

@@ -8,8 +8,8 @@ namespace CoStudyCloud.Core.ViewModels
         public int Id { get; set; }
 
         [Display(Name = "Group")]
-        public int StudyGroupId { get; set; }
-        public int UserId { get; set; }
+        public string? StudyGroupId { get; set; }
+        public string? UserId { get; set; }
 
         [Required]
         [MaxLength(100)]

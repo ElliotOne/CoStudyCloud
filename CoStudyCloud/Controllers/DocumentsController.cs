@@ -1,17 +1,35 @@
-﻿using CoStudyCloud.Core.ViewModels;
+﻿using AutoMapper;
+using CoStudyCloud.Core.Models;
+using CoStudyCloud.Core.Repositories;
+using CoStudyCloud.Core.ViewModels;
 using CoStudyCloud.Infrastructure.CloudStorage;
 using CoStudyCloud.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace CoStudyCloud.Controllers
 {
     public class DocumentsController : Controller
     {
+        private readonly IDocumentRepository _documentRepository;
+        private readonly IStudyGroupRepository _studyGroupRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ICloudStorage _cloudStorage;
+        private readonly IMapper _mapper;
 
-        public DocumentsController(ICloudStorage cloudStorage)
+        public DocumentsController(
+            IDocumentRepository documentRepository,
+            IStudyGroupRepository studyGroupRepository,
+            IUserRepository userRepository,
+            ICloudStorage cloudStorage,
+            IMapper mapper)
         {
+            _documentRepository = documentRepository;
+            _studyGroupRepository = studyGroupRepository;
+            _userRepository = userRepository;
             _cloudStorage = cloudStorage;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -19,8 +37,10 @@ namespace CoStudyCloud.Controllers
             return View();
         }
 
-        public IActionResult Upload()
+        public async Task<IActionResult> Upload()
         {
+            ViewData[nameof(DocumentFormViewModel.StudyGroupId)] = await GetStudyGroups();
+
             return View();
         }
 
@@ -30,14 +50,51 @@ namespace CoStudyCloud.Controllers
         {
             if (!ModelState.IsValid || documentFormViewModel.DocumentFile == null)
             {
-                return View();
+                ViewData[nameof(DocumentFormViewModel.StudyGroupId)] = await GetStudyGroups();
+
+                return View(documentFormViewModel);
             }
 
             await UploadFile(documentFormViewModel);
 
-            //TODO: Add a message to show file upload succeeded
+            var document = _mapper.Map<DocumentFormViewModel, Document>(documentFormViewModel);
 
-            return View();
+            var email = User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var user = await _userRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            document.UploaderUserId = user.Id;
+            document.CreateDate = DateTime.UtcNow;
+
+            await _documentRepository.Add(document);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [NonAction]
+        public async Task<SelectList> GetStudyGroups()
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var user = await _userRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                return new SelectList(null);
+            }
+
+            var studyGroups =
+                await _studyGroupRepository.GetAllStudyGroupsByUserId(user.Id!);
+
+            return new SelectList(
+                studyGroups,
+                nameof(StudyGroup.Id),
+                nameof(StudyGroup.Title));
         }
 
         private async Task UploadFile(DocumentFormViewModel documentFormViewModel)

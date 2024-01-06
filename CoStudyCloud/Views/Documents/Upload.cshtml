@@ -1,4 +1,5 @@
-﻿@model CoStudyCloud.Core.ViewModels.DocumentFormViewModel
+﻿@using CoStudyCloud.Core.ViewModels
+@model CoStudyCloud.Core.ViewModels.DocumentFormViewModel
 
 @{
     ViewData["Title"] = "Upload Document";
@@ -15,12 +16,9 @@
             <form asp-action="Upload" enctype="multipart/form-data">
                 <div class="form-group">
                     <label asp-for="StudyGroupId"></label>
-                    <select asp-for="StudyGroupId" class="form-select">
-                        <option>Software Engineering</option>
-                        <option>Data Science</option>
-                        <option>Machine Learning</option>
-                        <option>Cloud Computing</option>
-                    </select>
+                    <select asp-for="StudyGroupId"
+                            asp-items="(SelectList)ViewData[nameof(DocumentFormViewModel.StudyGroupId)]!"
+                            class="form-control"></select>
                 </div>
                 <div class="form-group">
                     <label asp-for="Title"></label>

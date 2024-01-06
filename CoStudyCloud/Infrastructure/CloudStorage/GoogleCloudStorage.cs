@@ -18,12 +18,11 @@ namespace CoStudyCloud.Infrastructure.CloudStorage
 
         public async Task<string> UploadFileAsync(IFormFile imageFile, string fileNameForStorage)
         {
-            using (var memoryStream = new MemoryStream())
-            {
-                await imageFile.CopyToAsync(memoryStream);
-                var dataObject = await _storageClient.UploadObjectAsync(_bucketName, fileNameForStorage, null, memoryStream);
-                return dataObject.MediaLink;
-            }
+            using var memoryStream = new MemoryStream();
+            await imageFile.CopyToAsync(memoryStream);
+            var dataObject =
+                await _storageClient.UploadObjectAsync(_bucketName, fileNameForStorage, null, memoryStream);
+            return dataObject.MediaLink;
         }
 
         public async Task DeleteFileAsync(string fileNameForStorage)

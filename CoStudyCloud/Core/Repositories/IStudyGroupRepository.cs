@@ -15,6 +15,13 @@ namespace CoStudyCloud.Core.Repositories
         Task<IEnumerable<StudyGroupWithJoinStatus>> GetStudyGroupsWithJoinStatus(string userId);
 
         /// <summary>
+        /// Get all study groups that the given user has joined
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>All study groups that the given user has joined</returns>
+        Task<IEnumerable<StudyGroup>> GetAllStudyGroupsByUserId(string userId);
+
+        /// <summary>
         /// Get all study groups with the status of being joined in the groups for the given admin
         /// </summary>
         /// <param name="adminUserId">Admin user id</param>
