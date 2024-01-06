@@ -21,7 +21,10 @@ namespace CoStudyCloud.Infrastructure.CloudStorage
             using var memoryStream = new MemoryStream();
             await imageFile.CopyToAsync(memoryStream);
             var dataObject =
-                await _storageClient.UploadObjectAsync(_bucketName, fileNameForStorage, null, memoryStream);
+                await _storageClient.UploadObjectAsync(_bucketName, fileNameForStorage, null, memoryStream, new UploadObjectOptions()
+                {
+                    PredefinedAcl = PredefinedObjectAcl.PublicRead
+                });
             return dataObject.MediaLink;
         }
 

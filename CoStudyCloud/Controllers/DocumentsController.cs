@@ -32,9 +32,27 @@ namespace CoStudyCloud.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var email = User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var user = await _userRepository.GetByEmail(email);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var documentsWithOwnerStatus =
+                await _documentRepository.GetDocumentsWithOwnerStatus(user.Id!);
+
+            var documentIndexViewModel = new DocumentIndexViewModel()
+            {
+                DocumentWithOwnerStatusViewModels = _mapper.Map<
+                IEnumerable<DocumentWithOwnerStatus>, IEnumerable<DocumentWithOwnerStatusViewModel>>(documentsWithOwnerStatus)
+            };
+
+            return View(documentIndexViewModel);
         }
 
         public async Task<IActionResult> Upload()

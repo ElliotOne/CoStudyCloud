@@ -1,4 +1,6 @@
-﻿@{
+﻿@model CoStudyCloud.Core.ViewModels.DocumentIndexViewModel
+
+@{
     ViewData["Title"] = "Documents";
 }
 
@@ -16,50 +18,55 @@
             </div>
         </div>
         <div class="col-12">
-            <table id="jq-table" class="table table-striped table-bordered dt-responsive">
-                <thead>
-                    <tr>
-                        <th>
-                            #
-                        </th>
-                        <th>
-                            Title
-                        </th>
-                        <th>
-                            Uploaded by
-                        </th>
-                        <th class="no-sort">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr role="row" class="odd">
-                        <td>1</td>
-                        <td>First file</td>
-                        <td>Elliot</td>
-                        <td>
-                            <a class="btn btn-primary table-btn" title="Edit">
-                                <span class="fa fa-pen"></span>
-                            </a>
-                            <a class="btn btn-danger table-btn" title="Delete">
-                                <span class="fa fa-trash"></span>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr role="row" class="even">
-                        <td>2</td>
-                        <td>Second file</td>
-                        <td>Chris</td>
-                        <td>
-                            <a class="btn btn-primary table-btn" title="Edit">
-                                <span class="fa fa-pen"></span>
-                            </a>
-                            <a class="btn btn-danger table-btn" title="Delete">
-                                <span class="fa fa-trash"></span>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+            @if (Model.DocumentWithOwnerStatusViewModels != null)
+            {
+                <table id="jq-table" class="table table-striped table-bordered dt-responsive">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(x => x.DocumentWithOwnerStatusViewModels!.Single().Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.DocumentWithOwnerStatusViewModels!.Single().StudyGroupTitle)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.DocumentWithOwnerStatusViewModels!.Single().UserFullName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(x => x.DocumentWithOwnerStatusViewModels!.Single().CreateDate)
+                            </th>
+                            <th class="no-sort">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var document in Model.DocumentWithOwnerStatusViewModels)
+                        {
+                            <tr role="row">
+                                <td>@document.Title</td>
+                                <td>@document.StudyGroupTitle</td>
+                                <td>@document.UserFullName</td>
+                                <td>@document.CreateDate</td>
+                                <td>
+                                    <a href="@document.FileUrl" class="btn btn-primary table-btn" title="Open">
+                                        <span class="fa fa-file-alt"></span>
+                                    </a>
+
+                                    @if (document.IsOwned)
+                                    {
+                                        <a class="btn btn-danger table-btn" title="Delete">
+                                            <span class="fa fa-trash"></span>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+
         </div>
     </div>
 </section>

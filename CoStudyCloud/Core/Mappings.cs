@@ -11,6 +11,11 @@ namespace CoStudyCloud.Core
     {
         public Mappings()
         {
+            CreateMap<DocumentWithOwnerStatus, DocumentWithOwnerStatusViewModel>()
+                .ForMember(dest => dest.UserFullName,
+                    opt =>
+                        opt.MapFrom<DocumentWithOwnerStatusViewModelUserFullNameResolver>());
+
             CreateMap<DocumentFormViewModel, Document>();
 
             CreateMap<StudyGroupWithJoinStatus, StudyGroupWithJoinStatusViewModel>();
@@ -23,6 +28,15 @@ namespace CoStudyCloud.Core
 
             CreateMap<User, ProfileFormViewModel>();
             CreateMap<User, UserEntryViewModel>();
+        }
+    }
+
+    internal class DocumentWithOwnerStatusViewModelUserFullNameResolver
+        : IValueResolver<DocumentWithOwnerStatus, DocumentWithOwnerStatusViewModel, string>
+    {
+        public string Resolve(DocumentWithOwnerStatus source, DocumentWithOwnerStatusViewModel destination, string destMember, ResolutionContext context)
+        {
+            return source.UploaderUserFirstName + " " + source.UploaderUserLastName;
         }
     }
 }
