@@ -16,10 +16,10 @@ namespace CoStudyCloud.Infrastructure.CloudStorage
             _bucketName = configuration.GetValue<string>("GoogleCloudStorageBucket");
         }
 
-        public async Task<string> UploadFileAsync(IFormFile imageFile, string fileNameForStorage)
+        public async Task<string> UploadFileAsync(IFormFile formFile, string fileNameForStorage)
         {
             using var memoryStream = new MemoryStream();
-            await imageFile.CopyToAsync(memoryStream);
+            await formFile.CopyToAsync(memoryStream);
             var dataObject =
                 await _storageClient.UploadObjectAsync(_bucketName, fileNameForStorage, null, memoryStream, new UploadObjectOptions()
                 {
