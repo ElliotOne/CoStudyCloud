@@ -3,6 +3,11 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
+# Copy the service account key file to the app directory
+COPY "CoStudyCloud/application_default_credentials.json" /app/application_default_credentials.json
+
+# Set environment variable for the application credentials
+ENV GOOGLE_APPLICATION_CREDENTIALS="/app/application_default_credentials.json"
 EXPOSE 8080
 EXPOSE 8081
 
